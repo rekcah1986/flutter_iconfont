@@ -4,6 +4,7 @@ from __future__ import division
 from __future__ import absolute_import
 from builtins import open
 from builtins import str
+from xpinyin import Pinyin
 from future import standard_library
 standard_library.install_aliases()
 from bs4 import BeautifulSoup
@@ -37,6 +38,7 @@ def get_filepath(res_path, pattern):
 
 
 def html_parse(html_path):
+    p = Pinyin()
     with Path.open(html_path,encoding='utf-8') as f:
         bs = BeautifulSoup(f.read(),'html.parser')
         icon_list = bs.select("div[class='content unicode'] > ul > li[class='dib']")
@@ -44,6 +46,7 @@ def html_parse(html_path):
         if icon_list:
             for el in icon_list:
                 name = el.select("div[class='name']")[0].string.replace(' ','_')
+                name = p.get_pinyin(name, "")
                 code = el.select("div[class='code-name']")[0].string[:-1].replace('&#','0')
                 r.append('''  static const IconData {0} = const IconDataEx({1});'''.format(name, code))
         else:
