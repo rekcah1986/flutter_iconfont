@@ -43,9 +43,10 @@ def html_parse(html_path):
         r = []
         if icon_list:
             for el in icon_list:
-                name = el.select("div[class='name']")[0].string.replace(' ','_')
+                oname = el.select("div[class='name']")[0].string.replace(' ','_')
+                name = p.get_pinyin(oname, "")
                 code = el.select("div[class='code-name']")[0].string[:-1].replace('&#','0')
-                r.append('''  static const IconData {0} = const IconDataEx({1});'''.format(name, code))
+                r.append('''  static const IconData {0} = const IconDataEx({1}); // {2}'''.format(name, code, oname))
         else:
             raise Exception("%s file parsing failed" % html_path)
         return r
